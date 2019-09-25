@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+}
+
+.row {
+    display: flex;
+}
+
+.col-filters {
+    margin-right: 30px;
+}
+
+h3 {
+    margin: 0;
+}
+
+.card-item {
+    margin-bottom: 40px;
+
+    border: 1px solid black;
+}
