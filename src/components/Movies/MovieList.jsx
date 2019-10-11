@@ -11,9 +11,9 @@ export default class MovieList extends React.Component {
         };
     }
 
-    componentDidMount() {
-        const { filters: {sort_by} } = this.props;
-        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU$sort_by=${sort_by}`;
+    getMovies = (filters, page) => {
+        const { sort_by, year } = filters;
+        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU&sort_by=${sort_by}&page=${page}&primary_release_year=${year}`;
 
         fetch(link)
             .then(response => {
@@ -26,24 +26,24 @@ export default class MovieList extends React.Component {
             });
     }
 
-    componentWillReceiveProps(nextProps){
-        console.log('props', this.props, 'nextProps', nextProps)
+    componentDidMount() {
+        this.getMovies(this.props.filters, this.props.page);
+    }
 
-        const { filters: {sort_by} } = nextProps;
-        const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU$sort_by=${sort_by}`;
+    componentDidUpdate(prevProps) {
+        if (this.props.filters.sort_by !== prevProps.filters.sort_by || this.props.filters.year !== prevProps.filters.year) {
+            this.getMovies(this.props.filters, 1);
+            this.props.onChangePage(1);
+        }
 
-        fetch(link)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                this.setState({
-                    movies: data.results
-                });
-            });
+        if (this.props.page !== prevProps.page) {
+            this.getMovies(this.props.filters, this.props.page);
+        }
     }
 
     render() {
+        console.log(this.state.movies);
+
         const { movies } = this.state;
 
         return (
